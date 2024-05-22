@@ -1,0 +1,91 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: univerzavmariboru
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: todolist33333
+service: todo-list-system
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  environment:
+    TODOS_TABLE: ${self:service}-todos
+    UPLOAD_BUCKET: ${self:service}-uploads
+
+plugins:
+  - serverless-offline
+  - serverless-localstack
+
+custom:
+  localstack:
+    host: http://localhost
+    edge: true
+    stages:
+      - local
+
+functions:
+  createTodo:
+    handler: handler.createTodo
+    timeout: 30
+    events:
+      - http:
+          path: /todos
+          method: post
+          cors: true
+
+  getTodos:
+    handler: handler.getTodos
+    timeout: 30
+    events:
+      - http:
+          path: /todos
+          method: get
+          cors: true
+
+  getTodoById:
+    handler: handler.getTodoById
+    timeout: 30
+    events:
+      - http:
+          path: /todos/{id}
+          method: get
+          cors: true
+
+  updateTodo:
+    handler: handler.updateTodo
+    timeout: 30
+    events:
+      - http:
+          path: /todos/{id}
+          method: put
+          cors: true
+
+  deleteTodo:
+    handler: handler.deleteTodo
+    timeout: 30
+    events:
+      - http:
+          path: /todos/{id}
+          method: delete
+          cors: true
+
+
+resources:
+  Resources:
+    TodosDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.TODOS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    UploadsBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:provider.environment.UPLOAD_BUCKET}

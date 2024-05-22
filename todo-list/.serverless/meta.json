@@ -1,0 +1,175 @@
+{
+  "/Users/martingrosek/Desktop/2_semester/ITA/itan8v3/todo-list": {
+    "versionSfCore": null,
+    "versionFramework": "4.0.23",
+    "isWithinCompose": false,
+    "composeOrgName": null,
+    "servicePath": "/Users/martingrosek/Desktop/2_semester/ITA/itan8v3/todo-list",
+    "serviceConfigFileName": "serverless.yml",
+    "service": {
+      "org": "univerzavmariboru",
+      "service": "todo-list-system",
+      "provider": {
+        "name": "aws",
+        "runtime": "nodejs18.x",
+        "region": "us-east-1",
+        "environment": {
+          "TODOS_TABLE": "todo-list-system-todos",
+          "UPLOAD_BUCKET": "todo-list-system-uploads"
+        },
+        "stage": "local",
+        "versionFunctions": true
+      },
+      "plugins": [
+        "serverless-offline",
+        "serverless-localstack"
+      ],
+      "custom": {
+        "localstack": {
+          "host": "http://localhost",
+          "edge": true,
+          "stages": [
+            "local"
+          ]
+        }
+      },
+      "functions": {
+        "createTodo": {
+          "handler": "handler.createTodo",
+          "events": [
+            {
+              "http": {
+                "path": "/todos",
+                "method": "post",
+                "cors": true
+              }
+            }
+          ]
+        },
+        "getTodos": {
+          "handler": "handler.getTodos",
+          "events": [
+            {
+              "http": {
+                "path": "/todos",
+                "method": "get",
+                "cors": true
+              }
+            }
+          ]
+        },
+        "getTodoById": {
+          "handler": "handler.getTodoById",
+          "events": [
+            {
+              "http": {
+                "path": "/todos/{id}",
+                "method": "get",
+                "cors": true
+              }
+            }
+          ]
+        },
+        "updateTodo": {
+          "handler": "handler.updateTodo",
+          "events": [
+            {
+              "http": {
+                "path": "/todos/{id}",
+                "method": "put",
+                "cors": true
+              }
+            }
+          ]
+        },
+        "deleteTodo": {
+          "handler": "handler.deleteTodo",
+          "events": [
+            {
+              "http": {
+                "path": "/todos/{id}",
+                "method": "delete",
+                "cors": true
+              }
+            }
+          ]
+        }
+      },
+      "resources": {
+        "Resources": {
+          "TodosDynamoDBTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+              "TableName": "todo-list-system-todos",
+              "AttributeDefinitions": [
+                {
+                  "AttributeName": "id",
+                  "AttributeType": "S"
+                }
+              ],
+              "KeySchema": [
+                {
+                  "AttributeName": "id",
+                  "KeyType": "HASH"
+                }
+              ],
+              "ProvisionedThroughput": {
+                "ReadCapacityUnits": 1,
+                "WriteCapacityUnits": 1
+              }
+            }
+          },
+          "UploadsBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+              "BucketName": "todo-list-system-uploads"
+            }
+          }
+        }
+      }
+    },
+    "serviceRawFile": "# \"org\" ensures this Service is used with the correct Serverless Framework Access Key.\norg: univerzavmariboru\nservice: todo-list-system\n\nprovider:\n  name: aws\n  runtime: nodejs18.x\n  region: us-east-1\n  environment:\n    TODOS_TABLE: ${self:service}-todos\n    UPLOAD_BUCKET: ${self:service}-uploads\n\nplugins:\n  - serverless-offline\n  - serverless-localstack\n\ncustom:\n  localstack:\n    host: http://localhost\n    edge: true\n    stages:\n      - local\n\nfunctions:\n  createTodo:\n    handler: handler.createTodo\n    events:\n      - http:\n          path: /todos\n          method: post\n          cors: true\n\n  getTodos:\n    handler: handler.getTodos\n    events:\n      - http:\n          path: /todos\n          method: get\n          cors: true\n\n  getTodoById:\n    handler: handler.getTodoById\n    events:\n      - http:\n          path: /todos/{id}\n          method: get\n          cors: true\n\n  updateTodo:\n    handler: handler.updateTodo\n    events:\n      - http:\n          path: /todos/{id}\n          method: put\n          cors: true\n\n  deleteTodo:\n    handler: handler.deleteTodo\n    events:\n      - http:\n          path: /todos/{id}\n          method: delete\n          cors: true\n\nresources:\n  Resources:\n    TodosDynamoDBTable:\n      Type: AWS::DynamoDB::Table\n      Properties:\n        TableName: ${self:provider.environment.TODOS_TABLE}\n        AttributeDefinitions:\n          - AttributeName: id\n            AttributeType: S\n        KeySchema:\n          - AttributeName: id\n            KeyType: HASH\n        ProvisionedThroughput:\n          ReadCapacityUnits: 1\n          WriteCapacityUnits: 1\n    UploadsBucket:\n      Type: AWS::S3::Bucket\n      Properties:\n        BucketName: ${self:provider.environment.UPLOAD_BUCKET}\n",
+    "command": [
+      "offline"
+    ],
+    "options": {
+      "stage": "local"
+    },
+    "error": {
+      "message": "ENOENT: no such file or directory, open '/Users/martingrosek/Desktop/2_semester/ITA/itan8v3/todo-list/node_modules/serverless-localstack/package.json'",
+      "stack": "Error: ENOENT: no such file or directory, open '/Users/martingrosek/Desktop/2_semester/ITA/itan8v3/todo-list/node_modules/serverless-localstack/package.json'",
+      "code": "ENOENT"
+    },
+    "accessKeyV2": "<REDACTED>",
+    "accessKeyV1": "<REDACTED>",
+    "orgId": "91b86752-725d-4282-ad0a-ddfd061b853b",
+    "orgName": "univerzavmariboru",
+    "userId": "STj8BP2dnMj0fMrf2q",
+    "dashboard": {
+      "isEnabledForService": false,
+      "requiredAuthentication": false,
+      "orgFeaturesInUse": null,
+      "orgObservabilityIntegrations": null,
+      "serviceAppId": null,
+      "serviceProvider": null,
+      "instanceParameters": null
+    },
+    "userName": "univerzavmariboru",
+    "subscription": null,
+    "userEmail": "martin.grosek@student.um.si",
+    "serviceProviderAwsCredentials": "<REDACTED>",
+    "serviceProviderAwsAccountId": "381492065988",
+    "versionSf": "4.0.23",
+    "serviceProviderAwsCfStackId": "arn:aws:cloudformation:us-east-1:381492065988:stack/SFSetup-3cbca9/5b188fb0-183e-11ef-a3fe-1216c147ed83",
+    "serviceProviderAwsCfStackCreated": "2024-05-22T13:22:36.829Z",
+    "serviceProviderAwsCfStackUpdated": null,
+    "serviceProviderAwsCfStackStatus": "CREATE_COMPLETE",
+    "serviceProviderAwsCfStackOutputs": [
+      {
+        "OutputKey": "SFRoleArn",
+        "OutputValue": "arn:aws:iam::381492065988:role/SFRole-3cbca9",
+        "Description": "ARN for the IAM Role used by Serverless Framework"
+      }
+    ]
+  }
+}
